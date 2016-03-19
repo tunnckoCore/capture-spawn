@@ -55,6 +55,17 @@ test('should handle results correctly', function (done) {
   })
 })
 
+test('should get buffer result as third argument in callback', function (done) {
+  var stream = spawn('echo', ['foo bar baz qux'])
+  captureSpawn(stream, function (err, res, buf) {
+    test.ifError(err)
+    test.strictEqual(res, 'foo bar baz qux\n')
+    test.strictEqual(isBuffer(buf), true)
+    test.strictEqual(buf.toString(), 'foo bar baz qux\n')
+    done()
+  })
+})
+
 test('should get empty string result if `stdio: inherit`', function (done) {
   var stream = spawn('echo', ['hello world foo'], {stdio: 'inherit'})
   captureSpawn(stream, function (err, res) {
@@ -74,3 +85,4 @@ test('should handle errors when `stdio: inherit`', function (done) {
     done()
   })
 })
+
