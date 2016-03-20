@@ -24,7 +24,18 @@
     "index.js"
   ],
   "keywords": [
-    "capture-spawn"
+    "async",
+    "asynchronous",
+    "capture",
+    "capture-spawn",
+    "child",
+    "child-process",
+    "output",
+    "process",
+    "res",
+    "response",
+    "result",
+    "spawn"
   ],
   "verb": {
     "run": true,
