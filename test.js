@@ -13,6 +13,7 @@ var test = require('assertit')
 var captureSpawn = require('./index')
 var spawn = require('cross-spawn-async')
 var isBuffer = require('is-buffer')
+var isChildProcess = require('is-child-process')
 
 test('should throw TypeError when not child_process stream passed', function (done) {
   function fixture () {
@@ -83,5 +84,14 @@ test('should handle errors when `stdio: inherit`', function (done) {
     test.strictEqual(err.message.indexOf('foo-bar-baz-cli ENOENT') !== -1, true)
     done()
   })
+})
+
+test('should return passed child_process stream', function (done) {
+  var cp = spawn('echo', ['hi'])
+  var stream = captureSpawn(cp, function callback () {})
+  test.strictEqual(isChildProcess(cp), true)
+  test.strictEqual(isChildProcess(stream), true)
+  test.strictEqual(cp, stream)
+  done()
 })
 
