@@ -13,9 +13,25 @@ var errorBase = require('error-base')
 /**
  * > Capture output of asynchronous `spawn`.
  *
+ * **Example**
+ *
+ * ```js
+ * var captureSpawn = require('capture-spawn')
+ * var spawn = require('cross-spawn-async')
+ *
+ * var cp = spawn('echo', ['hello charlike', 'world'])
+ * var stream = captureSpawn(cp, function callback (err, res, buf) {
+ *   if (err) return console.error(err)
+ *   console.log('result', res) // => 'hello charlike world\n'
+ *   console.log('buffer', buf) // => <Buffer ...>
+ *   console.log('result === buffer.toString()', buf.toString()) // => 'hello charlike world\n'
+ * })
+ * console.log(cp === stream) // => true
+ * ```
+ *
  * @param  {Stream}   `cp` Child process spawn stream.
- * @param  {Function} `callback` Handle errors and results of passed `cp`.
- * @return {Stream} Passed `cp` stream
+ * @param  {Function} `callback` Gets error, result or result buffer - `cb(err, res, buf)`.
+ * @return {Stream} Passed `cp` stream.
  * @api public
  */
 

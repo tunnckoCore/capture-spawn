@@ -16,15 +16,44 @@ npm i capture-spawn --save
 const captureSpawn = require('capture-spawn')
 ```
 
-### [captureSpawn](index.js#L22)
-
+### [captureSpawn](index.js#L38)
 > Capture output of asynchronous `spawn`.
 
 **Params**
 
 * `cp` **{Stream}**: Child process spawn stream.    
-* `callback` **{Function}**: Handle errors and results of passed `cp`.    
-* `returns` **{Stream}**: Passed `cp` stream  
+* `callback` **{Function}**: Gets error, result or result buffer - `cb(err, res, buf)`.    
+* `returns` **{Stream}**: Passed `cp` stream.  
+
+**Example**
+
+```js
+var captureSpawn = require('capture-spawn')
+var spawn = require('cross-spawn-async')
+
+var cp = spawn('echo', ['hello charlike', 'world'])
+var stream = captureSpawn(cp, function callback (err, res, buf) {
+  if (err) return console.error(err)
+  console.log('result', res) // => 'hello charlike world\n'
+  console.log('buffer', buf) // => <Buffer ...>
+  console.log('result === buffer.toString()', buf.toString()) // => 'hello charlike world\n'
+})
+console.log(cp === stream) // => true
+```
+
+### Error handling
+> Where `buffer` is the `stderr` output and `code` can be `string` or `number`.
+
+```js
+var proc = spawn('node', ['not-exist', 'something'])
+captureSpawn(proc, console.log)
+// => SpawnError {
+//   name: 'SpawnError',
+//   message: '',
+//   code: 1,
+//   buffer: <Buffer 6d 6f 64 75 ...>
+// }
+```
 
 ## Related
 * [capture-stream](https://www.npmjs.com/package/capture-stream): Capture stream output. | [homepage](https://github.com/doowb/capture-stream)
