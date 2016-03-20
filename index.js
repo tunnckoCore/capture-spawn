@@ -10,6 +10,15 @@
 var isChildProcess = require('is-child-process')
 var errorBase = require('error-base')
 
+/**
+ * > Capture output of asynchronous `spawn`.
+ *
+ * @param  {Stream}   `cp` Child process spawn stream.
+ * @param  {Function} `callback` Handle errors and results of passed `cp`.
+ * @return {Stream} Passed `cp` stream
+ * @api public
+ */
+
 module.exports = function captureSpawn (cp, callback) {
   if (!isChildProcess(cp)) {
     throw new TypeError('capture-spawn: expect `cp` be child_process.spawn stream')
@@ -51,11 +60,19 @@ module.exports = function captureSpawn (cp, callback) {
   return cp
 }
 
-function SpawnError () {
+/**
+ * > Custom error class that is thrown on error.
+ *
+ * @param {String} `message`
+ * @param {Object} `options`
+ * @api private
+ */
+
+function SpawnError (message, options) {
   return errorBase('SpawnError', function (message, options) {
     this.name = 'SpawnError'
     this.message = message
     this.code = options.code
     this.buffer = options.buffer
-  }).apply(this, arguments)
+  }).call(this, message, options)
 }

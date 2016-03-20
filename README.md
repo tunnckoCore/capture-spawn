@@ -16,6 +16,16 @@ npm i capture-spawn --save
 const captureSpawn = require('capture-spawn')
 ```
 
+### [captureSpawn](index.js#L22)
+
+> Capture output of asynchronous `spawn`.
+
+**Params**
+
+* `cp` **{Stream}**: Child process spawn stream.    
+* `callback` **{Function}**: Handle errors and results of passed `cp`.    
+* `returns` **{Stream}**: Passed `cp` stream  
+
 ## Related
 * [capture-stream](https://www.npmjs.com/package/capture-stream): Capture stream output. | [homepage](https://github.com/doowb/capture-stream)
 * [cross-spawn](https://www.npmjs.com/package/cross-spawn): Cross platform child_process#spawn and child_process#spawnSync | [homepage](https://github.com/IndigoUnited/node-cross-spawn)
