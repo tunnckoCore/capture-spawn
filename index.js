@@ -10,6 +10,12 @@
 var isChildProcess = require('is-child-process')
 var errorBase = require('error-base')
 
+var SpawnError = errorBase('SpawnError', function (message, options) {
+  this.message = message
+  this.code = options.code
+  this.buffer = options.buffer
+})
+
 module.exports = function captureSpawn (cp, callback) {
   if (!isChildProcess(cp)) {
     throw new TypeError('capture-spawn: expect `cp` be child_process.spawn stream')
@@ -21,11 +27,12 @@ module.exports = function captureSpawn (cp, callback) {
   var stdout = null
   var stderr = null
 
-  cp.stdout && cp.stdout.on('data', function (data) {
+  cp.stdout && cp.stdout.on('data', function (data) { // eslint-disable-line no-unused-expressions
     stdout = Buffer.concat([stdout || new Buffer(''), data || new Buffer('')])
   })
-  cp.stderr && cp.stderr.on('data', function (data) {
-    stderr = Buffer.concat([stderr || new Buffer(''), data || new Buffer('')])
+  cp.stderr && cp.stderr.on('data', function (buf) { // eslint-disable-line no-unused-expressions
+    stderr = stderr || new Buffer('')
+    stderr = Buffer.concat([stderr, buf || new Buffer('')])
   })
 
   function done (err) {
@@ -38,17 +45,11 @@ module.exports = function captureSpawn (cp, callback) {
       return
     }
 
-    var SpawnError = errorBase('SpawnError', function (message, options) {
-      this.message = message
-      this.code = options.code
-      this.buffer = options.buffer
-    })
     err = typeof err === 'object' ? err : {code: err}
-    err = new SpawnError(err.message || '', {
+    callback(new SpawnError(err.message || '', {
       code: err.code || err.status || 1,
       buffer: stderr
-    })
-    callback(err)
+    }))
   }
 
   cp.once('error', done)

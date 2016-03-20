@@ -36,7 +36,7 @@ test('should throw TypeError when `callback` not a function', function (done) {
 })
 
 test('should handle errors correctly', function (done) {
-  var stream = spawn('npm', ['install', 'gfgdgldifgdfjkgldkfjgdfg'])
+  var stream = spawn('node', ['not existing', 'thingy'])
   captureSpawn(stream, function (err) {
     test.ifError(!err)
     test.strictEqual(err.code, 1)
@@ -46,11 +46,19 @@ test('should handle errors correctly', function (done) {
   })
 })
 
-test('should handle results correctly', function (done) {
+test('should get result correctly', function (done) {
   var stream = spawn('echo', ['hello world'])
   captureSpawn(stream, function (err, res) {
     test.ifError(err)
     test.strictEqual(res, 'hello world\n')
+    done()
+  })
+})
+
+test('should get empty string result if `stdio: inherit`', function (done) {
+  var cp = spawn('echo', ['hello world foo'], {stdio: 'inherit'})
+  captureSpawn(cp, function (e, result) {
+    test.strictEqual(result, '')
     done()
   })
 })
@@ -62,15 +70,6 @@ test('should get buffer result as third argument in callback', function (done) {
     test.strictEqual(res, 'foo bar baz qux\n')
     test.strictEqual(isBuffer(buf), true)
     test.strictEqual(buf.toString(), 'foo bar baz qux\n')
-    done()
-  })
-})
-
-test('should get empty string result if `stdio: inherit`', function (done) {
-  var stream = spawn('echo', ['hello world foo'], {stdio: 'inherit'})
-  captureSpawn(stream, function (err, res) {
-    test.ifError(err)
-    test.strictEqual(res, '')
     done()
   })
 })
