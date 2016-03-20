@@ -1,6 +1,6 @@
 {
   "name": "capture-spawn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Asynchronously capturing spawn output.",
   "repository": "tunnckoCore/capture-spawn",
   "author": "Charlike Mike Reagent <@tunnckoCore> (http://www.tunnckocore.tk)",
